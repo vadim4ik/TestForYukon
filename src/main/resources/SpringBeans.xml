@@ -1,0 +1,34 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+	<util:list id="hostsList" value-type="java.util.List">
+		<ref bean="host1"/>
+		<ref bean="host2"/>
+		<ref bean="host3"/>
+	</util:list>
+
+
+	<util:map id="host1">
+		<entry key="host" value="localhost"></entry>
+		<entry key="port" value="5677"></entry>
+	</util:map>
+
+	<util:map id="host2">
+		<entry key="host" value="localhost"></entry>
+		<entry key="port" value="1234"></entry>
+	</util:map>
+
+	<util:map id="host3">
+		<entry key="host" value="localhost"></entry>
+		<entry key="port" value="4444"></entry>
+	</util:map>
+
+	<bean id="tcpService" class="com.services.TCPServiceImpl"/>
+	<bean id="app" class="com.App"/>
+
+	<util:properties id="applicationProperties" location="application.properties"/>
+</beans>
