@@ -3,8 +3,6 @@ package com;
 /**
  * Created by Vadym on 30.01.2017.
  */
-import com.services.TCPService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

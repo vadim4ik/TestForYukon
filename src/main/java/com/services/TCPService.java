@@ -1,15 +1,16 @@
 package com.services;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Vadym on 29.01.2017.
  */
 public interface TCPService {
 
-    List getHosts();
+    Set getHosts();
 
-    boolean verifyHosts();
+    boolean verifyHosts() throws InterruptedException;
 
     boolean runServers();
 

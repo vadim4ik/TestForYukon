@@ -6,14 +6,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.net.SocketFactory;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,28 +20,28 @@ public class TCPServiceImpl implements TCPService {
     @Qualifier("applicationProperties")
     private Properties applicationProperties;
 
-    public List getHosts () {
+    public Set getHosts () {
             ApplicationContext appContext = new ClassPathXmlApplicationContext(new String[]{
                     "/SpringBeans.xml"});
-            List hosts = (List) appContext.getBean("hostsList");
+            Set hosts = (Set) appContext.getBean("hostsList");
             return hosts;
     }
 
-    public boolean verifyHosts (){
-        List hosts = getHosts();
+    public boolean verifyHosts () throws InterruptedException {
+        Set hosts = getHosts();
         if (hosts.size() > 0) {
-            for (int i = 0; i <= hosts.size() - 1; i++) {
-                    Map<String, String> map = (Map<String, String>) hosts.get(i);
-                    String host = map.get("host");
-                    int port = Integer.parseInt(map.get("port"));
+            for (Object entry : hosts) {
+                String host = (String) ((LinkedHashMap) entry).get("host");
+                int port = Integer.parseInt((String)((LinkedHashMap) entry).get("port"));
 
-                    Socket skt = setSocketConnection(host, port);
+                TimeUnit.SECONDS.sleep(1);
+                Socket skt = setSocketConnection(host, port);
                     if (skt instanceof Socket) {
                         if (skt.isConnected()) {
                             System.out.format("Service in host %s:%d is up\n", host, port);
                             return true;
                         } else {
-                            System.out.format("Service in host %s:%d is up\n", host, port);
+                            System.out.format("Service in host %s:%d is down\n", host, port);
 
                         }
                     }
@@ -56,11 +51,10 @@ public class TCPServiceImpl implements TCPService {
     }
 
     public boolean runServers (){
-        List hosts = getHosts();
+        Set hosts = getHosts();
         try {
-            for (int i = 0; i <= hosts.size() - 1; i++) {
-                Map<String,String> map = (Map<String, String>) hosts.get(i);
-                int port = Integer.parseInt(map.get("port"));
+            for (Object entry : hosts)  {
+                int port = Integer.parseInt((String)((LinkedHashMap) entry).get("port"));
 
                 ServerSocket srvr = new ServerSocket(port);
                 Socket skt = srvr.accept();
